@@ -168,3 +168,58 @@
   <div class="container">
     <h1>QUOKKAQUANTUM</h1>
     <p class="tagline">Quantum leaps. Permanent smiles.</p>
+<div class="manifesto">
+      Most animals learned how to survive.<br>
+      Quokkas learned how to <span style="color:#ff00aa;text-shadow:0 0 30px #ff00aa;">never stop smiling</span>.<br><br>
+      We took that biological glitch, smashed it into the Solana VM,<br>
+      and overclocked it with quantum entanglement.<br><br>
+      <strong>$QQUANT</strong> is not a memecoin.<br>
+      It is the first tokenized happiness particle that exists in permanent superposition of<br>
+      <span style="color:#00f7ff;text-shadow:0 0 40px #00f7ff;">“already mooned”</span> and <span style="color:#ff00aa;text-shadow:0 0 40px #ff00aa;">“about to 1000× again”</span>.<br><br>
+      Zero taxes. Zero roadmap. Zero sadness.<br>
+      Only irreversible joy and price discovery at the speed of light.<br><br>
+      <em>The chart doesn’t go up — it quantum tunnels straight through your sell button.</em>
+    </div>
+
+    <img src="https://i.imgur.com/YOUR_HOLOGRAPHIC_QUOKKA.png" alt="$QQUANT" class="quokka-holo">
+
+    <!-- TOMBOL UDAH DEAD-CENTER BANGET -->
+    <div class="buttons-wrapper">
+      <a href="https://raydium.io/swap/?inputCurrency=sol&outputCurrency=YOUR_CA_HERE&fixed=in" target="_blank" class="btn btn-buy">BUY ON RAYDIUM</a>
+      <div class="btn btn-ca" onclick="copyCA()">COPY CA</div>
+    </div>
+
+    <div class="ca-box">
+      <strong>Contract Address (Solana):</strong><br><br>
+      YOUR_CA_HERE
+      <p style="margin-top:20px;color:#0f0;font-size:1.5rem;" id="notice">↑ Click button above to copy</p>
+    </div>
+
+    <div class="chart">
+      <iframe src="https://dexscreener.com/solana/YOUR_CA_HERE?embed=1&theme=dark" height="680" width="100%" style="border:none;"></iframe>
+    </div>
+
+    <div class="socials">
+      <a href="https://t.me/quokkaquantum" target="_blank">Telegram</a>
+      <a href="https://twitter.com/quokkaquantum" target="_blank">Twitter</a>
+      <a href="https://dexscreener.com/solana/YOUR_CA_HERE" target="_blank">Chart</a>
+    </div>
+  </div>
+
+  <footer style="text-align:center;padding:100px;color:#444;">
+    © 2025 QuokkaQuantum — First happiness particle on the blockchain.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles',{particles:{number:{value:100},color:{value:['#00f7ff','#ff00aa']},opacity:{value:0.8,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:'#00f7ff',opacity:0.4},move:{enable:true,speed:2}},interactivity:{events:{onhover:{enable:true,mode:'repulse'}}}});
+
+    // Matrix rain
+    const c=document.getElementById('matrix-bg');x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight; l='QUOKKAQUANTUM量子$QQUANT0101';f=14;col=c.width/f;d=Array(Math.floor(col)).fill(1);
+    setInterval(()=>{x.fillStyle='rgba(0,0,0,0.05)';x.fillRect(0,0,c.width,c.height);x.fillStyle='#00f7ff';x.font=f+'px monospace';for(i=0;i<d.length;i++){t=l[Math.floor(Math.random()*l.length)];x.fillText(t,i*f,d[i]*f);if(d[i]*f>c.height&&Math.random()>0.975)d[i]=0;d[i]++}},35);
+
+    // Copy CA
+    function copyCA(){navigator.clipboard.writeText("YOUR_CA_HERE");document.getElementById("notice").innerHTML="Copied bro! Quantum teleport done ✅";setTimeout(()=>{document.getElementById("notice").innerHTML="↑ Click button above to copy"},3000);}
+  </script>
+</body>
+</html>
